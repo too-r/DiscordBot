@@ -3,6 +3,7 @@ extern crate discord;
 extern crate toml;
 #[macro_use]
 extern crate serde_derive;
+extern crate serde_json;
 
 use discord::{Discord, State, Error, Connection};
 use discord::model::{Event, ReadyEvent, ChannelId};
@@ -11,20 +12,29 @@ use std::fs::File;
 use std::io::Read;
 use std::io::prelude::*;
 
-#[derive(Deserialize)]
-pub struct Config {
-    token: String,
-}
 
 pub fn main() {
-    let config = get_config();
-    let token = config.token;
-    
+    let mut file = File::open("config.json").unwrap();
+    let mut config = String::new();
+    file.read_to_string(&mut config).unwrap();
+
+    #[derive(Deserialize)]
+    pub struct Config {
+        pub token: String,
+    }
+
+    //Parse JSON to the Config struct
+    let config_json = serde_json::from_str::<Config>(&config).unwrap();
+    let token = config_json.token;
+
+    //Login to API
     let discord = Discord::from_bot_token(&token).expect("Expected a token");
+    //Establish a websocket connection
     let (mut connection, ready) = discord.connect().expect("Could not connect");
     println!("[Ready] {} is serving {} servers",
              ready.user.username,
              ready.servers.len());
+    //Object to track user state
     let mut state = State::new(ready);
 
     //Receive events forever
@@ -95,6 +105,9 @@ pub fn main() {
                             }
                         }
                     }
+                    "!src" => {
+                        discord.send_message(message.channel_id, "https://github.com/too-r/discordbot", "", false);
+                    }
                     _ => continue
                 }
             }
@@ -117,13 +130,6 @@ pub fn main() {
             _ => {} //Discard other events
         }
     }
-}
-
-fn get_config() -> Config {
-    let mut buf = String::new();
-    let mut f = File::open("config.toml").unwrap();
-    f.read_to_string(&mut buf).unwrap();
-    toml::from_str(&buf).unwrap()
 }
 
 fn warn<T, E: ::std::fmt::Debug>(result: Result<T, E>) {
