@@ -12,8 +12,8 @@ use std::fs::File;
 use std::io::Read;
 use std::io::prelude::*;
 
-
 pub fn main() {
+    //Config file, should be under <Project dir>/config.json
     let mut file = File::open("config.json").unwrap();
     let mut config = String::new();
     file.read_to_string(&mut config).unwrap();
@@ -66,6 +66,7 @@ pub fn main() {
                     continue;
                 }
 
+                //Split the message into espaced segments
                 let mut split = message.content.split(' ');
                 let first_word = split.next().unwrap_or("");
                 let argument = split.next().unwrap_or("");
@@ -73,8 +74,7 @@ pub fn main() {
                 match first_word {
                     "!help" => {
                         if argument.eq_ignore_ascii_case("dj") {
-                            discord.send_message(message.channel_id, "Plays YouTube videos in voice chat,
-                            ``!dj <link>``, ``!dj stop`` to stop playback ``!dj quit`` to stop and leave voice", "", false);
+                            discord.send_message(message.channel_id, "Plays YouTube videos in voice chat, ``!dj <link>``, ``!dj stop`` to stop playback ``!dj quit`` to stop and leave voice", "", false);
                         } else {
                             discord.send_message(message.channel_id, "Available commands: ``!dj``. Use ``!help <command>`` for more help on a command", "", false);
                         }
