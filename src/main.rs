@@ -12,6 +12,8 @@ use std::fs::File;
 use std::io::Read;
 use std::io::prelude::*;
 
+mod commands;
+
 pub fn main() {
     //Config file, should be under <Project dir>/config.json
     let mut file = File::open("config.json").unwrap();
@@ -36,6 +38,8 @@ pub fn main() {
              ready.servers.len());
     //Object to track user state
     let mut state = State::new(ready);
+    println!("{:?}", state.all_servers()[0]);
+
 
     //Receive events forever
     loop {
