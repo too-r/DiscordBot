@@ -28,17 +28,3 @@ pub fn kick(msg: Message, srv_id, discord: Discord) {
         _ {},
     }
 }
-
-pub fn add_warn(msg: Message, count: &str) {
-    let count_i32: i32 = count::parse(&count);
-
-    let path = Path::new("~/.config/toorbot/");
-
-    let read_dirs = fs::read_dir(path)?;
-
-    if read_dirs.iter().find(|x| x == "warnings.txt") == false {
-        File::create("~/.config/toorbot/warnings.txt");
-    }
-
-    let f = File::open("~/.config/toorbot/warnings.txt");
-}
