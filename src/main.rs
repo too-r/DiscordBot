@@ -4,6 +4,7 @@ extern crate toml;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
+extern crate google_youtube3 as youtube;
 
 use discord::{Discord, State, Error, Connection};
 use discord::model::{Event, ReadyEvent, ChannelId};
