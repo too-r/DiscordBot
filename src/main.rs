@@ -64,58 +64,6 @@ pub fn main() {
         state.update(&event);
 
         match event {
-            Event::MessageCreate(message) => {
-                use std::ascii::AsciiExt;
-                //Don't want to be replying to our own messages
-                if message.author.id == state.user().id {
-                    continue;
-                }
-
-                //Split the message into espaced segments
-                let mut split = message.content.split(' ');
-                let first_word = split.next().unwrap_or("");
-                let argument = split.next().unwrap_or("");
-
-                match first_word {
-                    "!help" => {
-                        if argument.eq_ignore_ascii_case("dj") {
-                            discord.send_message(message.channel_id, "Plays YouTube videos in voice chat, ``!dj <link>``, ``!dj stop`` to stop playback ``!dj quit`` to stop and leave voice", "", false);
-                        } else {
-                            discord.send_message(message.channel_id, "Available commands: ``!dj``. Use ``!help <command>`` for more help on a command", "", false);
-                        }
-                    }
-                    "!dj" => {
-                        let vchan = state.find_voice_user(message.author.id);
-                        if argument.eq_ignore_ascii_case("stop") {
-                            vchan.map(|(sid, _)| connection.voice(sid).stop());
-                        } else if argument.eq_ignore_ascii_case("quit") {
-                            vchan.map(|(sid, _)| connection.drop_voice(sid));
-                        } else {
-                            let output = if let Some((server_id, channel_id)) = vchan {
-                                match discord::voice::open_ytdl_stream(argument) {
-                                    Ok(stream) => {
-                                        let voice = connection.voice(server_id);
-                                        voice.set_deaf(true);
-                                        voice.connect(channel_id);
-                                        voice.play(stream);
-                                        String::new()
-                                    }
-                                    Err(error) => format!("Error: {}", error),
-                                }
-                            } else {
-                                "You must be in a voice channel to DJ".to_owned()
-                            };
-                            if output.is_empty() {
-                                warn(discord.send_message(message.channel_id, &output, "", false));
-                            }
-                        }
-                    }
-                    "!src" => {
-                        discord.send_message(message.channel_id, "https://github.com/too-r/discordbot", "", false);
-                    }
-                    _ => continue
-                }
-            }
             Event::VoiceStateUpdate(server_id, _) => {
                 if let Some(cur_channel) = connection.voice(server_id).current_channel() {
                     match server_id {
