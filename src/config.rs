@@ -1,6 +1,8 @@
 use toml;
 use std::path::Path;
 use std::env::home_dir;
+use std::fs::File;
+use std::io::prelude::*;
 
 #[derive(Deserialize)]
 pub struct Config {
@@ -8,11 +10,11 @@ pub struct Config {
     pub admins: Vec<u64>,
 }
 
-pub fn get_config(p: Path) -> Config {
-    let home_path = home_dir.unwrap();
+pub fn get_config() -> Config {
+    let home_path = home_dir().unwrap();
     let home_str = home_path.to_str().unwrap();
 
-    let cfg_path = format!("{}./{}", home_str, p);
+    let cfg_path = format!("{}/.config/toorbot/config.toml", home_str);
     
     let mut buf = String::new();
     let mut f = File::open(&cfg_path).unwrap();
