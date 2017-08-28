@@ -14,7 +14,7 @@ use std::io::prelude::*;
 use config::get_config;
 
 pub fn main() {
-    let mut config = get_config("config/toorbot/config.toml");
+    let mut config = get_config();
     let token = config.token;
 
     //Login to API
