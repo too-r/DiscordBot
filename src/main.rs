@@ -3,13 +3,11 @@ extern crate discord;
 extern crate toml;
 #[macro_use]
 extern crate serde_derive;
-extern crate serde_json;
 
 use discord::{Discord, State, Error, Connection};
 use discord::model::{Event, ReadyEvent, ChannelId};
 use std::env;
 use std::fs::File;
-use std::io::Read;
 use std::io::prelude::*;
 
 pub fn main() {
@@ -36,8 +34,6 @@ pub fn main() {
              ready.servers.len());
     //Object to track user state
     let mut state = State::new(ready);
-    println!("{:?}", state.all_servers()[0]);
-
 
     //Receive events forever
     loop {
