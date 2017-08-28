@@ -6,7 +6,17 @@ use std::io::prelude::*;
 
 #[derive(Deserialize)]
 pub struct Config {
+    pub token: Token,
+    pub admins: Admins
+}
+
+#[derive(Deserialize)]
+pub struct Token {
     pub token: String,
+}
+
+#[derive(Deserialize)]
+pub struct Admins {
     pub admins: Vec<u64>,
 }
 
