@@ -1,10 +1,10 @@
-use self::discord;
-use self::discord::Discord;
-use self::discord::model::{ServerId, Message};
+use discord::model::{Message, ServerId};
+use discord::Discord;
 use std::fs::File;
 use std::path::Path;
+use super::config::Config;
 
-pub fn ban(msg: Message, srv_id: ServerId, discord: Discord) {
+pub fn ban(msg: Message, srv_id: ServerId, discord: Discord, config: &Config) {
     //The msg construct stores a list of mentions, the ban function takes the first mention and gets the id from there, meaning it is impossible to ban two users at once, you must run separate commands.
     let user_id = msg.mentions[0].id;
     
@@ -17,7 +17,7 @@ pub fn ban(msg: Message, srv_id: ServerId, discord: Discord) {
     }
 }
 
-pub fn kick(msg: Message, srv_id, discord: Discord) {
+pub fn kick(msg: Message, srv_id: ServerId, discord: Discord, config: &Config) {
     let user_id = msg.mentions[0].id;
 
     match msg.author.id {
