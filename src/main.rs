@@ -4,26 +4,18 @@ extern crate toml;
 #[macro_use]
 extern crate serde_derive;
 
+pub mod config;
+
 use discord::{Discord, State, Error, Connection};
 use discord::model::{Event, ReadyEvent, ChannelId};
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
+use config::get_config;
 
 pub fn main() {
-    //Config file, should be under <Project dir>/config.json
-    let mut file = File::open("config.json").unwrap();
-    let mut config = String::new();
-    file.read_to_string(&mut config).unwrap();
-
-    #[derive(Deserialize)]
-    pub struct Config {
-        pub token: String,
-    }
-
-    //Parse JSON to the Config struct
-    let config_json = serde_json::from_str::<Config>(&config).unwrap();
-    let token = config_json.token;
+    let mut config = get_config("config/toorbot/config.toml");
+    let token = config.token;
 
     //Login to API
     let discord = Discord::from_bot_token(&token).expect("Expected a token");
