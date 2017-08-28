@@ -15,7 +15,7 @@ use config::get_config;
 
 pub fn main() {
     let mut config = get_config();
-    let token = config.token;
+    let token = config.token.token;
 
     //Login to API
     let discord = Discord::from_bot_token(&token).expect("Expected a token");
