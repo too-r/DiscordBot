@@ -4,7 +4,6 @@ extern crate toml;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
-extern crate google_youtube3 as youtube;
 
 use discord::{Discord, State, Error, Connection};
 use discord::model::{Event, ReadyEvent, ChannelId};
@@ -64,6 +63,18 @@ pub fn main() {
         state.update(&event);
 
         match event {
+            Event::MessageCreate(message) => {
+                //Just a bit of a safeguard to ensure we don't reply to our own messages.
+                if message.author.id == state.user().id {
+                    continue;
+                }
+
+                use std::ascii::AsciiExt;
+                let mut split = message.content.split(" ");
+                let first_word = split.next().unwrap();
+                let argument = split.next().unwrap();
+            }
+            
             Event::VoiceStateUpdate(server_id, _) => {
                 if let Some(cur_channel) = connection.voice(server_id).current_channel() {
                     match server_id {
