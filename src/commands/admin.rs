@@ -20,11 +20,5 @@ pub fn ban(msg: Message, srv_id: ServerId, discord: Discord, config: &Config) {
 pub fn kick(msg: Message, srv_id: ServerId, discord: Discord, config: &Config) {
     let user_id = msg.mentions[0].id;
 
-    match msg.author.id {
-        &config.admins[0] => discord.kick_member(srv_id, user_id),
-        &config.admins[1] => discord.kick_member(srv_id, user_id),
-        &config.admins[2] => discord.kick_member(srv_id, user_id),
-        &config.admins[3] => discord.kick_member(srv_id, user_id),
-        _ {},
-    }
+    let author_id = format!("{}", msg.author.id).parse::<u64>().unwrap();
 }
