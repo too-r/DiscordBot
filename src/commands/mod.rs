@@ -1,13 +1,24 @@
 pub mod admin;
 
-use config::get_config();
+use config::get_config;
+use discord::Discord;
+use discord::model::Message;
 
-pub fn help(discord: Discord, msg: Message, arg: String) {
+struct PossibleHelpCases {
+    music: String,
+    admin: String,
+    ban: String,
+    kick: String,
+}
+
+pub fn help(discord: Discord, msg: Message, arg: &'static str) {
     //Grab us a config object
     let config = get_config();
-    
+     
+    let help_cases = PossibleHelpCases { music: "music", admin: "admin", ban: "ban", kick: "kick" };
+
     match arg {
-        "music" => {
+        "music"=> {
            discord.send_message(msg.channel_id, "Play music using ``~dj <YouTube link>``. ``~dj stop`` stops playback, and ``~dj quit`` makes the bot leave the channel.", "", false);
         },
 
@@ -17,7 +28,7 @@ pub fn help(discord: Discord, msg: Message, arg: String) {
         },
 
         "ban" => {
-            discord.send_message(msg.channel_id, "Usage: ``~ban <mention>``", false);
+            discord.send_message(msg.channel_id, "Usage: ``~ban <mention>``", "", false);
         },
 
         "kick" => {
