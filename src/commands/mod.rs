@@ -1,4 +1,5 @@
 pub mod admin;
+pub mod music;
 
 use config::get_config;
 use discord::Discord;
@@ -14,8 +15,6 @@ struct PossibleHelpCases {
 pub fn help(discord: Discord, msg: Message, arg: &'static str) {
     //Grab us a config object
     let config = get_config();
-     
-    let help_cases = PossibleHelpCases { music: "music", admin: "admin", ban: "ban", kick: "kick" };
 
     match arg {
         "music"=> {
