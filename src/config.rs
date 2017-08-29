@@ -7,7 +7,7 @@ use std::io::prelude::*;
 #[derive(Deserialize)]
 pub struct Config {
     pub token: Token,
-    pub admins: Admins
+    pub admins: Admins,
 }
 
 #[derive(Deserialize)]
@@ -25,10 +25,10 @@ pub fn get_config() -> Config {
     let home_str = home_path.to_str().unwrap();
 
     let cfg_path = format!("{}/.config/toorbot/config.toml", home_str);
-    
+
     let mut buf = String::new();
     let mut f = File::open(&cfg_path).unwrap();
-    
+
     f.read_to_string(&mut buf).unwrap();
     toml::from_str(&buf).unwrap()
 }

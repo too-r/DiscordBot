@@ -42,7 +42,7 @@ pub fn main() {
                     println!("[Ready] Reconnected successfully.");
                 }
                 if let Error::Closed(..) = err {
-                    break;   
+                    break;
                 }
                 continue;
             }
@@ -66,18 +66,27 @@ pub fn main() {
                     _ => continue,
                 }
             }
-            
+
             Event::VoiceStateUpdate(server_id, _) => {
                 if let Some(cur_channel) = connection.voice(server_id).current_channel() {
                     match server_id {
-                        Some(server_id) => if let Some(srv) = state.servers().iter().find(|srv| srv.id == server_id) {
-                            if srv.voice_states.iter().filter(|vs| vs.channel_id == Some(cur_channel)).count() <= 1 {
-                                connection.voice(Some(server_id)).disconnect();
+                        Some(server_id) => {
+                            if let Some(srv) = state.servers().iter().find(|srv| {
+                                                                               srv.id == server_id
+                                                                           }) {
+                                if srv.voice_states
+                                       .iter()
+                                       .filter(|vs| vs.channel_id == Some(cur_channel))
+                                       .count() <= 1 {
+                                    connection.voice(Some(server_id)).disconnect();
+                                }
                             }
-                        },
-                        None => if let Some(call) = state.calls().get(&cur_channel) {
-                            if call.voice_states.len() <= 1 {
-                                connection.voice(server_id).disconnect();
+                        }
+                        None => {
+                            if let Some(call) = state.calls().get(&cur_channel) {
+                                if call.voice_states.len() <= 1 {
+                                    connection.voice(server_id).disconnect();
+                                }
                             }
                         }
                     }
@@ -90,7 +99,7 @@ pub fn main() {
 
 fn warn<T, E: ::std::fmt::Debug>(result: Result<T, E>) {
     match result {
-        Ok(_) => {},
+        Ok(_) => {}
         Err(err) => println!("[Warning] {:?}", err),
     }
 }
