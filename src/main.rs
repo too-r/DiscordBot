@@ -5,6 +5,7 @@ extern crate toml;
 extern crate serde_derive;
 
 pub mod config;
+mod commands;
 
 use discord::{Discord, State, Error, Connection};
 use discord::model::{Event, ReadyEvent, ChannelId};
