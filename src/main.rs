@@ -60,6 +60,11 @@ pub fn main() {
                 let mut split = message.content.split(" ");
                 let first_word = split.next().unwrap();
                 let argument = split.next().unwrap();
+
+                match first_word {
+                    "help" => commands::help(discord, message, argument),
+                    _ => continue,
+                }
             }
             
             Event::VoiceStateUpdate(server_id, _) => {
