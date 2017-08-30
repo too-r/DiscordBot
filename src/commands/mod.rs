@@ -12,7 +12,7 @@ struct PossibleHelpCases {
     kick: String,
 }
 
-pub fn help(discord: Discord, msg: Message, arg: &'static str) {
+pub fn help(discord: &Discord, msg: &Message, arg: &'static str) {
     //Grab us a config object
     let config = get_config();
 

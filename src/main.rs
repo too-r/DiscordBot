@@ -62,7 +62,7 @@ pub fn main() {
                 let argument = split.next().unwrap();
 
                 match first_word {
-                    "help" => commands::help(discord, message, argument),
+                    "help" => commands::help(&discord, &message, argument),
                     _ => continue,
                 }
             }
