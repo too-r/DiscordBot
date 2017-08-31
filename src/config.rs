@@ -21,14 +21,14 @@ pub struct Admins {
 }
 
 pub fn get_config() -> Config {
-    let home_path = home_dir().unwrap();
-    let home_str = home_path.to_str().unwrap();
+    let home_dir = home_dir().unwrap();
 
-    let cfg_path = format!("{}/.config/toorbot/config.toml", home_str);
-
+    let cfg_path = home_dir.join(".config").join("toorbot").join("config.toml");
+    
+    let mut file = File::open(cfg_path).unwrap();
     let mut buf = String::new();
-    let mut f = File::open(&cfg_path).unwrap();
 
-    f.read_to_string(&mut buf).unwrap();
+    file.read_to_string(&mut buf).unwrap();
+
     toml::from_str(&buf).unwrap()
 }
