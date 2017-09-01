@@ -4,7 +4,7 @@ use std::fs::File;
 use std::path::Path;
 use config::{self, Config};
 
-pub fn ban(msg: Message, srv_id: ServerId, discord: Discord, config: &Config) {
+pub fn ban(msg: Message, srv_id: ServerId, discord: &Discord, config: &Config) {
     let config = config::get_config(); //Config object
 
     let user_id = msg.mentions[0].id;

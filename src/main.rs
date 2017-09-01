@@ -7,7 +7,7 @@ extern crate serde_derive;
 pub mod config;
 mod commands;
 
-use discord::{Discord, State, Error, Connection};
+use discord::{Discord, State, Error, Connection, ChannelRef};
 use discord::model::{Event, ReadyEvent, ChannelId};
 use std::env;
 use std::fs::File;
@@ -15,8 +15,7 @@ use std::io::prelude::*;
 use config::get_config;
 
 pub fn main() {
-    let mut config = get_config();
-    let token = config.token.token;
+    let token = get_config().token.token;
 
     //Login to API
     let discord = Discord::from_bot_token(&token).expect("Expected a token");
@@ -51,18 +50,30 @@ pub fn main() {
 
         match event {
             Event::MessageCreate(message) => {
+                use std::ascii::AsciiExt;
+
                 //Just a bit of a safeguard to ensure we don't reply to our own messages.
                 if message.author.id == state.user().id {
                     continue;
                 }
 
-                use std::ascii::AsciiExt;
-                let mut split = message.content.split(" ");
-                let first_word = split.next().unwrap();
-                let argument = split.next().unwrap();
+                //Create a config object to pass to all our functions.
+                let mut config = get_config();
+
+                let mut split = message.content.split(' ');
+                let first_word = split.next().unwrap_or("");
+                let argument = split.next().unwrap_or("");
 
                 match first_word {
                     "help" => commands::help(&discord, &message, argument),
+                    "ban" => {
+                        match state.find_channel(message.channel_id).unwrap() {
+                            ChannelRef::Public(ref server, _) => {
+                                commands::admin::ban(message, server.id, &discord, &config);
+                            },
+                            _ => {},
+                        }
+                    }
                     _ => continue,
                 }
             }

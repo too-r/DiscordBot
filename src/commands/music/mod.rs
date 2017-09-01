@@ -3,7 +3,7 @@ use discord::model::Message;
 use std::ascii::AsciiExt;
 use warn;
 
-pub fn play(discord: Discord, msg: Message, state: State, arg: String, connection: Connection) {
+pub fn play(discord: Discord, msg: Message, state: State, arg: String, connection: &mut Connection) {
     let vchan = state.find_voice_user(msg.author.id);
     if arg.eq_ignore_ascii_case("stop") {
         vchan.map(|(sid, _)| connection.voice(sid).stop());
