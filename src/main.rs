@@ -82,9 +82,7 @@ pub fn main() {
                 if let Some(cur_channel) = connection.voice(server_id).current_channel() {
                     match server_id {
                         Some(server_id) => {
-                            if let Some(srv) = state.servers().iter().find(|srv| {
-                                                                               srv.id == server_id
-                                                                           }) {
+                            if let Some(srv) = state.servers().iter().find(|srv| srv.id == server_id) {
                                 if srv.voice_states
                                        .iter()
                                        .filter(|vs| vs.channel_id == Some(cur_channel))
