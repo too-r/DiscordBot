@@ -54,7 +54,7 @@ pub fn main() {
 
                 //Just a bit of a safeguard to ensure we don't reply to our own messages.
                 if message.author.id == state.user().id {
-                    continue;
+                    continue
                 }
 
                 //Create a config object to pass to all our functions.
@@ -65,12 +65,22 @@ pub fn main() {
                 let argument = split.next().unwrap_or("");
 
                 match first_word {
-                    "help" => commands::help(&discord, &message, argument),
-                    "ban" => {
+                    "~help" => commands::help(&discord, &message, argument),
+                    "~ban" => {
                         match state.find_channel(message.channel_id).unwrap() {
                             ChannelRef::Public(ref server, _) => {
-                                commands::admin::ban(message, server.id, &discord, &config);
+                                commands::admin::ban(&message, server.id, &discord, &config);
                             },
+                            _ => {},
+                        }
+                    }
+
+                    "kick" => {
+                        match state.find_channel(message.channel_id).unwrap() {
+                            ChannelRef::Public(ref server, _) => {
+                                commands::admin::kick(&message, server.id, &discord, &config);
+                            },
+                            
                             _ => {},
                         }
                     }
@@ -106,7 +116,7 @@ pub fn main() {
     }
 }
 
-fn warn<T, E: ::std::fmt::Debug>(result: Result<T, E>) {
+pub fn warn<T, E: ::std::fmt::Debug>(result: Result<T, E>) {
     match result {
         Ok(_) => {}
         Err(err) => println!("[Warning] {:?}", err),
