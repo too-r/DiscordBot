@@ -2,11 +2,9 @@ use discord::model::{Message, ServerId};
 use discord::Discord;
 use std::fs::File;
 use std::path::Path;
-use config::{self, Config};
+use config::Config;
 
-pub fn ban(msg: Message, srv_id: ServerId, discord: &Discord, config: &Config) {
-    let config = config::get_config(); //Config object
-
+pub fn ban(msg: &Message, srv_id: ServerId, discord: &Discord, config: &Config) {
     let user_id = msg.mentions[0].id;
 
     //Make this a u64 just so we can check for it in the admins Vec.
@@ -21,7 +19,8 @@ pub fn ban(msg: Message, srv_id: ServerId, discord: &Discord, config: &Config) {
                              false);
     } else {
         if config.admins.admins.contains(&author_id) {
-            discord.add_ban(srv_id, user_id, 0);
+            discord.add_ban(srv_id, user_id, 10).unwrap();
+            discord.send_message(msg.channel_id, "Banned the mentioned user", "", false);
         } else {
             let message = format!("{} You do not have permission to do that",
                                   user_id.mention());
@@ -30,7 +29,7 @@ pub fn ban(msg: Message, srv_id: ServerId, discord: &Discord, config: &Config) {
     }
 }
 
-pub fn kick(msg: Message, srv_id: ServerId, discord: Discord, config: &Config) {
+pub fn kick(msg: &Message, srv_id: ServerId, discord: &Discord, config: &Config) {
     let user_id = msg.mentions[0].id;
 
     let user_id_u64 = format!("{}", user_id).parse::<u64>().unwrap();
