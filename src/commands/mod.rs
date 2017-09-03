@@ -5,14 +5,7 @@ use config::get_config;
 use discord::Discord;
 use discord::model::Message;
 
-struct PossibleHelpCases {
-    music: String,
-    admin: String,
-    ban: String,
-    kick: String,
-}
-
-pub fn help(discord: &Discord, msg: &Message, arg: &'static str) {
+pub fn help(discord: &Discord, msg: &Message, arg: &str) {
     //Grab us a config object
     let config = get_config();
 
