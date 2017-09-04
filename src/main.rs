@@ -74,8 +74,7 @@ pub fn main() {
                             _ => {},
                         }
                     }
-
-                    "kick" => {
+                    "~kick" => {
                         match state.find_channel(message.channel_id).unwrap() {
                             ChannelRef::Public(ref server, _) => {
                                 commands::admin::kick(&message, server.id, &discord, &config);
@@ -84,6 +83,7 @@ pub fn main() {
                             _ => {},
                         }
                     }
+                    "~dj" => commands::music::play(&discord, &message, &state, argument, &mut connection),
                     _ => continue,
                 }
             }
