@@ -2,7 +2,7 @@ pub mod admin;
 pub mod music;
 
 use config::get_config;
-use discord::{Discord, State, ChannelRef};
+use discord::{Discord, State, ChannelRef, Error};
 use discord::model::Message;
 
 pub fn help(discord: &Discord, msg: &Message, arg: &str) {
@@ -34,12 +34,12 @@ pub fn help(discord: &Discord, msg: &Message, arg: &str) {
     }
 }
 
-pub struct Info;
+/*pub struct Info;
 
 impl Info {
-    pub fn server_info(discord: &Discord, state: &State, msg: &Message) -> Result<Message> {
+    pub fn server_info(discord: &Discord, state: &State, msg: &Message) -> Result<Message, Error> {
         match state.find_channel(msg.channel_id).unwrap() {
-            ChannelRef::Public(ref server, _) {
+            ChannelRef::Public(ref server, _) => {
                 let owner_id = server.owner_id;
                 let region = server.region;
 
@@ -49,11 +49,11 @@ impl Info {
                     println!("No server icon found");
                 }
 
-                let message = discord.send_embed(/*Some shit here*/)?;
+                let message = discord.send_embed(/*Some shit here*/);
                 message
             },
 
             _ => println!("The message was sent in a group or DM."),
         }
     }
-}
+}*/
