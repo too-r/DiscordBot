@@ -32,7 +32,7 @@ pub fn main() {
         let event = match connection.recv_event() {
             Ok(event) => event, //We received the event without errors
             Err(err) => {
-                warning(&format!("[Warning] Receive error: {:?}", err));
+                warning(&format!("Receive error: {:?}", err));
                 if let Error::WebSocket(..) = err {
                     //handle a connection drop
                     let (new_connection, ready) = discord.connect().expect("connect failed");
