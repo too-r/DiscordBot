@@ -6,6 +6,7 @@ extern crate serde_derive;
 
 pub mod config;
 mod commands;
+mod handlers;
 
 use discord::{Discord, State, Error, Connection, ChannelRef};
 use discord::model::{Event, ReadyEvent, ChannelId};
@@ -13,6 +14,9 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use config::get_config;
+
+static mut RATE_LIMITED: bool = false;
+static mut RETRY_TIME: u64 = 1;
 
 pub fn main() {
     let token = get_config().token.token;
@@ -40,6 +44,19 @@ pub fn main() {
                     state = State::new(ready);
                     println!("[Ready] Reconnected successfully.");
                 }
+                
+                //A ratelimit error, inform the user that they were ratelimited and how long they
+                //have to retry.
+                if let Error::RateLimited(value) = err {
+                    unsafe {
+                        RATE_LIMITED = true;
+                    }
+
+                    unsafe {
+                        RETRY_TIME = value;
+                    }
+                }
+
                 if let Error::Closed(..) = err {
                     break;
                 }
@@ -50,41 +67,19 @@ pub fn main() {
 
         match event {
             Event::MessageCreate(message) => {
-                use std::ascii::AsciiExt;
-
-                //Just a bit of a safeguard to ensure we don't reply to our own messages.
-                if message.author.id == state.user().id {
-                    continue
-                }
-
-                //Create a config object to pass to all our functions.
-                let mut config = get_config();
-
-                let mut split = message.content.split(' ');
-                let first_word = split.next().unwrap_or("");
-                let argument = split.next().unwrap_or("");
-
-                match first_word {
-                    "~help" => commands::help(&discord, &message, argument),
-                    "~ban" => {
-                        match state.find_channel(message.channel_id).unwrap() {
-                            ChannelRef::Public(ref server, _) => {
-                                commands::admin::ban(&message, server.id, &discord, &config);
-                            },
-                            _ => {},
-                        }
+                //Tell the user to stop if we are being ratelimited.
+                if RATE_LIMITED {
+                    let mut secs = std::time::Duration::from_millis(RETRY_TIME).as_secs();
+                    let warning_str = &format!("I am being ratelimited. Please retry in {} seconds", secs);
+                    discord.send_message(message.channel_id, warning_str, "", false);
+                } else {
+                    if message.author.id == state.user().id {
+                        //The message was from us, restart the loop.
+                        continue
                     }
-                    "~kick" => {
-                        match state.find_channel(message.channel_id).unwrap() {
-                            ChannelRef::Public(ref server, _) => {
-                                commands::admin::kick(&message, server.id, &discord, &config);
-                            },
-                            
-                            _ => {},
-                        }
-                    }
-                    "~dj" => commands::music::play(&discord, &message, &state, argument, &mut connection),
-                    _ => continue,
+                    
+                    //Handle this message.
+                    handlers::message_handler(&state, &discord, &message);
                 }
             }
 
