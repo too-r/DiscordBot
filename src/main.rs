@@ -79,7 +79,7 @@ pub fn main() {
                     }
                     
                     //Handle this message.
-                    handlers::message_handler(&state, &discord, &message);
+                    handlers::message_handler(&state, &discord, &message, connection);
                 }
             }
 
