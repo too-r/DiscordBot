@@ -18,7 +18,7 @@ use config::get_config;
 static mut RATE_LIMITED: bool = false;
 static mut RETRY_TIME: u64 = 1;
 
-pub fn main() {
+fn main() {
     let token = get_config().token.token;
 
     //Login to API
@@ -68,18 +68,20 @@ pub fn main() {
         match event {
             Event::MessageCreate(message) => {
                 //Tell the user to stop if we are being ratelimited.
-                if RATE_LIMITED {
-                    let mut secs = std::time::Duration::from_millis(RETRY_TIME).as_secs();
-                    let warning_str = &format!("I am being ratelimited. Please retry in {} seconds", secs);
-                    discord.send_message(message.channel_id, warning_str, "", false);
-                } else {
-                    if message.author.id == state.user().id {
-                        //The message was from us, restart the loop.
-                        continue
-                    }
+                unsafe { 
+                    if RATE_LIMITED {
+                        let mut secs = std::time::Duration::from_millis(RETRY_TIME).as_secs();
+                        let warning_str = &format!("I am being ratelimited. Please retry in {} seconds", secs);
+                        discord.send_message(message.channel_id, warning_str, "", false);
+                    } else {
+                        if message.author.id == state.user().id {
+                            //The message was from us, restart the loop.
+                            continue
+                        }
                     
-                    //Handle this message.
-                    handlers::message_handler(&state, &discord, &message, connection);
+                        //Handle this message.
+                        handlers::message_handler(&state, &discord, &message, connection);
+                    }
                 }
             }
 
