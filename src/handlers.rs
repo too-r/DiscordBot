@@ -5,14 +5,7 @@ use {RATE_LIMITED, RETRY_TIME};
 use config::get_config;
 use commands;
 
-pub fn message_handler(state: &State, discord: &Discord, message: &Message, connection: Connection) {
-    //Tell the user to stop if we are being ratelimited.
-    if RATE_LIMITED {
-        let mut secs = std::time::Duration::from_millis(RETRY_TIME).as_secs();
-        let warning_str = &format!("I am being ratelimited. Please retry in {} seconds", secs);
-        discord.send_message(message.channel_id, warning_str, "", false);
-    }
-
+pub fn message_handler(state: &State, discord: &Discord, message: &Message, connection: &mut Connection) {
     //Create a config object to pass to all our functions.
     let mut config = get_config();
 
