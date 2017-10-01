@@ -63,8 +63,11 @@ fn main() {
                 continue;
             }
         };
-        state.update(&event);
 
+        //Update user state after with this event.
+        state.update(&event);
+        
+        //Loop to check the type of event we received over websocket.
         match event {
             Event::MessageCreate(message) => {
                 //Tell the user to stop if we are being ratelimited.
@@ -80,7 +83,7 @@ fn main() {
                         }
                     
                         //Handle this message.
-                        handlers::message_handler(&state, &discord, &message, connection);
+                        handlers::message_handler(&state, &discord, &message, &mut connection);
                     }
                 }
             }
@@ -108,7 +111,7 @@ fn main() {
                     }
                 }
             }
-            _ => {} //Discard other events
+            _ => {} //Discard other events 
         }
     }
 }
