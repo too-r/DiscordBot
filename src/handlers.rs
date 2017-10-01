@@ -5,7 +5,7 @@ use {RATE_LIMITED, RETRY_TIME};
 use config::get_config;
 use commands;
 
-pub fn message_handler(state: &State, discord: &Discord, message: &Message, connection: &mut Connection) {
+pub fn message_handler(state: &State, discord: &Discord, message: &Message, mut connection: &mut Connection) {
     //Create a config object to pass to all our functions.
     let mut config = get_config();
 
