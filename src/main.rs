@@ -9,17 +9,11 @@ use std::env;
 use std::path::Path;
 use std::fs::File;
 
+mod commands;
+
 struct Handler;
 
 impl EventHandler for Handler {
-    fn on_message(&self, _: Context, msg: Message) {
-        if msg.content == "!ping" {
-            if let Err(err) = msg.channel_id.say("pong!") {
-                println!("Error sending message: {:?}", err);
-            }
-        }
-    }
-
     fn on_ready(&self, _: Context, ready: Ready) {
         println!("Connected with name: {}", ready.user.name);
         println!("Serving {} servers", ready.guilds.len());
