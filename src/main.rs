@@ -2,14 +2,15 @@
 extern crate serenity;
 extern crate toml;
 
+mod commands;
+
 use serenity::prelude::*;
 use serenity::model::*;
 use serenity::framework::StandardFramework;
 use std::env;
 use std::path::Path;
 use std::fs::File;
-
-mod commands;
+use commands::{about, ping};
 
 struct Handler;
 
@@ -35,11 +36,3 @@ fn main() {
         println!("Client error: {:?}", client_err);
     }
 }
-
-command!(about(_context, message) {
-    let _ = message.channel_id.say("A simple bot for now, with basic voice capability");
-});
-
-command!(ping(_context, message) {
-    let _ = message.channel_id.say("Pong!");
-});
