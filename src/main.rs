@@ -37,13 +37,13 @@ fn main() {
     }
 }
 
-#[allow(dead_code)]
-fn setup() -> Result<String, _> {
+/*#[allow(dead_code)]
+fn setup() -> Result<String, ()> {
     let mut path: Path = "$HOME/.config/toorbot/config.toml";
-    let mut f = File::open(&path)?
+    let mut f = File::open(&path)?;
     let mut buf = String::new();
 
     f.read_to_string(&mut buf)?;
 
     Ok(buf)
-}
+}*/
