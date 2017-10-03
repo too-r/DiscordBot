@@ -2,10 +2,3 @@
 name = "discordbot"
 version = "0.1.0"
 authors = ["too-r <william.huddie@gmail.com>"]
-
-[dependencies]
-discord = "0.8.0"
-toml = "0.4.2"
-serde_derive = "1.0.10"
-serde = "1.0.10"
-serde_json = "*"
