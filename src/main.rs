@@ -26,6 +26,7 @@ pub fn main() {
              ready.servers.len());
     //Object to track user state
     let mut state = State::new(ready);
+    connection.sync_calls(&state.all_private_channels());
 
     //Receive events forever
     loop {
@@ -41,10 +42,10 @@ pub fn main() {
                     println!("[Ready] Reconnected successfully.");
                 }
                 if let Error::Closed(..) = err {
-                    break;
+                    break
                 }
-                continue;
-            }
+                continue
+            },
         };
         state.update(&event);
 
