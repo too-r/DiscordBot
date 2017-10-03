@@ -36,3 +36,14 @@ fn main() {
         println!("Client error: {:?}", client_err);
     }
 }
+
+#[allow(dead_code)]
+fn setup() -> Result<String, _> {
+    let mut path: Path = "$HOME/.config/toorbot/config.toml";
+    let mut f = File::open(&path)?
+    let mut buf = String::new();
+
+    f.read_to_string(&mut buf)?;
+
+    Ok(buf)
+}
