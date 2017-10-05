@@ -1,4 +1,5 @@
 use serenity::utils::Colour;
+use serenity::framework::standard::Error;
 
 command!(about(_context, message) {
     let _ = message.channel_id.say("A simple bot for now, with basic voice capability");
@@ -23,7 +24,7 @@ command!(info(_context, message) {
                     roles.push_str(&role.name);
                 } else {
                     //There was no corresponding RoleId for this Role. Return an error.
-                    return Err("Failed to get Role for RoleId".to_owned());
+                    Err("No RoleId for this Role".to_owned());
                 }
             }
 
@@ -31,7 +32,7 @@ command!(info(_context, message) {
                 if let Some(join_date) = member.joined_at.as_ref() {
                     join_date.naive_utc().format("%c")
                 } else {
-                    return Err("Failed to get the date this user joined at".to_owned());
+                    
                 }
             };
             let avatar_url = message.author.face();
@@ -54,7 +55,7 @@ command!(info(_context, message) {
                 .color(Colour::from_rgb(124, 42, 42))
             ));
             if result.is_err() {
-                return Err("Failed to send message".to_owned())
+                println!("Failed to send message");
             }
         }
     }
