@@ -1,6 +1,7 @@
 #[macro_use] 
 extern crate serenity;
 extern crate toml;
+extern crate chrono;
 
 mod commands;
 
