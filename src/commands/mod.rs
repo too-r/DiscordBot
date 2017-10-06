@@ -1,5 +1,5 @@
 use serenity::utils::Colour;
-use serenity::framework::standard::Error;
+use chrono;
 
 command!(about(_context, message) {
     let _ = message.channel_id.say("A simple bot for now, with basic voice capability");
@@ -24,7 +24,7 @@ command!(info(_context, message) {
                     roles.push_str(&role.name);
                 } else {
                     //There was no corresponding RoleId for this Role. Return an error.
-                    Err("No RoleId for this Role".to_owned());
+                    return Err("No RoleId for this Role".to_owned());
                 }
             }
 
@@ -32,7 +32,7 @@ command!(info(_context, message) {
                 if let Some(join_date) = member.joined_at.as_ref() {
                     join_date.naive_utc().format("%c")
                 } else {
-                    
+                    chrono::naive::NaiveDateTime::from_timestamp(0, 0).format("%c") 
                 }
             };
             let avatar_url = message.author.face();
