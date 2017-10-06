@@ -1,8 +1,8 @@
 [package]
+authors = ["too-r <william.huddie@gmail.com>"]
 name = "discordbot"
 version = "0.1.0"
-authors = ["too-r <william.huddie@gmail.com>"]
-
 [dependencies]
+chrono = "*"
 serenity = "0.4.0"
 toml = "*"
