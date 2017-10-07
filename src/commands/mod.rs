@@ -1,4 +1,5 @@
 use serenity::utils::Colour;
+use serenity::framework::standard::CommandError;
 use chrono;
 
 command!(about(_context, message) {
@@ -24,7 +25,7 @@ command!(info(_context, message) {
                     roles.push_str(&role.name);
                 } else {
                     //There was no corresponding RoleId for this Role. Return an error.
-                    return Err("No RoleId for this Role".to_owned());
+                    return Err(CommandError::from("No RoleId for this Role".to_string()));
                 }
             }
 
@@ -60,3 +61,12 @@ command!(info(_context, message) {
         }
     }
 }); 
+
+command!(join(context, message, args {
+    let server_id = match message.guild_id() {
+        Some(gid) => gid
+        None => {
+            return Err(CommandError::from("Couldn't retrieve server id".to_string()));
+        }
+    }
+})

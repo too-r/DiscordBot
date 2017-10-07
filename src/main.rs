@@ -31,20 +31,10 @@ fn main() {
         StandardFramework::new()
         .configure(|c| c.prefix("~"))               
         .command("about", |c| c.exec(about))
+        .command("info", |c| c.exec(commands::info))
         .command("ping", |c| c.exec(ping)));
 
     if let Err(client_err) = client.start() {
         println!("Client error: {:?}", client_err);
     }
 }
-
-/*#[allow(dead_code)]
-fn setup() -> Result<String, ()> {
-    let mut path: Path = "$HOME/.config/toorbot/config.toml";
-    let mut f = File::open(&path)?;
-    let mut buf = String::new();
-
-    f.read_to_string(&mut buf)?;
-
-    Ok(buf)
-}*/
