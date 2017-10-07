@@ -62,11 +62,11 @@ command!(info(_context, message) {
     }
 }); 
 
-command!(join(context, message, args {
+/*command!(join(context, message, args {
     let server_id = match message.guild_id() {
         Some(gid) => gid
         None => {
             return Err(CommandError::from("Couldn't retrieve server id".to_string()));
         }
     }
-})
+})*/
